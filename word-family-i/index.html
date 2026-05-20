@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Family i Game</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Comic Sans MS', cursive;
+background:linear-gradient(to bottom,#dff7ff,#fff7e6);
+overflow:hidden;
+touch-action:manipulation;
+}
+
+/* LOGO SCREEN */
+
+#logoScreen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:white;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+#logoScreen img{
+width:320px;
+max-width:80%;
+animation:zoom 2s ease;
+}
+
+@keyframes zoom{
+0%{
+transform:scale(0);
+opacity:0;
+}
+100%{
+transform:scale(1);
+opacity:1;
+}
+}
+
+/* MAIN GAME */
+
+#gameContainer{
+display:none;
+width:100vw;
+height:100vh;
+overflow:auto;
+padding:12px;
+}
+
+/* TOP BAR */
+
+#topBar{
+background:white;
+padding:12px;
+border-radius:18px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+color:#5c3d99;
+margin-bottom:12px;
+box-shadow:0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* GAME TITLE */
+
+#gameTitle{
+background:white;
+padding:10px 20px;
+border-radius:20px;
+display:table;
+margin:0 auto 15px;
+font-size:34px;
+font-weight:bold;
+color:#ff4081;
+box-shadow:0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* INSTRUCTION */
+
+#instruction{
+background:white;
+padding:12px;
+border-radius:18px;
+text-align:center;
+font-size:22px;
+margin-bottom:15px;
+color:#333;
+box-shadow:0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* CONTENT */
+
+#content{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+}
+
+/* BALLOON */
+
+#balloon{
+width:200px;
+height:250px;
+border:5px solid #ff80ab;
+border-radius:50%;
+background:rgba(255,255,255,0.8);
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+animation:float 3s ease-in-out infinite;
+margin-bottom:20px;
+position:relative;
+}
+
+#balloon::after{
+content:'';
+position:absolute;
+bottom:-45px;
+width:4px;
+height:45px;
+background:#555;
+}
+
+@keyframes float{
+0%,100%{
+transform:translateY(0);
+}
+50%{
+transform:translateY(-12px);
+}
+}
+
+.mainImage{
+width:120px;
+height:120px;
+object-fit:contain;
+}
+
+.wordText{
+font-size:42px;
+font-weight:bold;
+color:#5c3d99;
+}
+
+/* OPTION AREA */
+
+.optionArea{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:15px;
+margin-top:15px;
+}
+
+/* WORD BUTTON */
+
+.optionBtn{
+padding:15px 24px;
+font-size:28px;
+font-weight:bold;
+background:#fff176;
+border:none;
+border-radius:18px;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+cursor:pointer;
+}
+
+/* IMAGE BUTTON */
+
+.pictureBtn{
+width:110px;
+height:110px;
+background:white;
+border-radius:18px;
+border:4px solid #ffd54f;
+padding:8px;
+}
+
+.pictureBtn img{
+width:100%;
+height:100%;
+object-fit:contain;
+}
+
+/* LETTER GAME */
+
+#letterArea{
+display:flex;
+gap:12px;
+margin:20px;
+}
+
+.letterBox{
+width:70px;
+height:70px;
+border:4px dashed #ff9800;
+border-radius:14px;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:36px;
+font-weight:bold;
+}
+
+#letters{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:12px;
+max-width:450px;
+}
+
+.letterBtn{
+width:65px;
+height:65px;
+border:none;
+border-radius:50%;
+background:#81d4fa;
+font-size:32px;
+font-weight:bold;
+color:#003049;
+}
+
+/* FEEDBACK */
+
+#feedback{
+font-size:90px;
+height:100px;
+margin-top:10px;
+}
+
+/* RESTART */
+
+#restartBtn{
+display:none;
+margin:20px auto;
+padding:15px 35px;
+font-size:24px;
+font-weight:bold;
+background:#ff9800;
+color:white;
+border:none;
+border-radius:20px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+#gameTitle{
+font-size:28px;
+}
+
+#instruction{
+font-size:18px;
+}
+
+.optionBtn{
+font-size:22px;
+padding:12px 16px;
+}
+
+.pictureBtn{
+width:85px;
+height:85px;
+}
+
+.letterBtn{
+width:55px;
+height:55px;
+font-size:26px;
+}
+
+.letterBox{
+width:55px;
+height:55px;
+font-size:28px;
+}
+
+#balloon{
+width:170px;
+height:220px;
+}
+
+.mainImage{
+width:100px;
+height:100px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGO SCREEN -->
+
+<div id="logoScreen">
+
+<img src="https://raw.githubusercontent.com/deepikadeorukhkar/LY4/main/literacy/assets/innovine-logo.png">
+
+</div>
+
+<!-- MAIN GAME -->
+
+<div id="gameContainer">
+
+<div id="topBar">
+Word Family 'i'
+</div>
+
+<div id="gameTitle">
+Game 1
+</div>
+
+<div id="instruction">
+Look at the picture and choose the correct word.
+</div>
+
+<div id="content"></div>
+
+<div id="feedback"></div>
+
+<button id="restartBtn">
+🔄 Restart Game
+</button>
+
+</div>
+
+<!-- AUDIO -->
+
+<audio id="bgMusic" loop>
+<source src="https://raw.githubusercontent.com/deepikadeorukhkar/LY4/main/literacy/assets/background-music.mp3">
+</audio>
+
+<audio id="correctAudio">
+<source src="https://raw.githubusercontent.com/deepikadeorukhkar/LY4/main/literacy/assets/correct.mp3">
+</audio>
+
+<audio id="wrongAudio">
+<source src="https://raw.githubusercontent.com/deepikadeorukhkar/LY4/main/literacy/assets/wrong.mp3">
+</audio>
+
+<script>
+
+/* ELEMENTS */
+
+const logoScreen=document.getElementById('logoScreen');
+const gameContainer=document.getElementById('gameContainer');
+const content=document.getElementById('content');
+const feedback=document.getElementById('feedback');
+const gameTitle=document.getElementById('gameTitle');
+const instruction=document.getElementById('instruction');
+const restartBtn=document.getElementById('restartBtn');
+
+const bgMusic=document.getElementById('bgMusic');
+const correctAudio=document.getElementById('correctAudio');
+const wrongAudio=document.getElementById('wrongAudio');
+
+/* SPEECH */
+
+function speak(text){
+
+if('speechSynthesis' in window){
+
+speechSynthesis.cancel();
+
+const utter=
+new SpeechSynthesisUtterance(text);
+
+utter.rate=0.85;
+utter.pitch=1.1;
+
+speechSynthesis.speak(utter);
+
+}
+
+}
+
+/* FEEDBACK */
+
+function showCorrect(){
+
+feedback.innerHTML='👏';
+
+correctAudio.currentTime=0;
+correctAudio.play();
+
+setTimeout(()=>{
+feedback.innerHTML='';
+},1000);
+
+}
+
+function showWrong(){
+
+feedback.innerHTML='❌';
+
+wrongAudio.currentTime=0;
+wrongAudio.play();
+
+setTimeout(()=>{
+feedback.innerHTML='';
+},1000);
+
+}
+
+/* SHUFFLE */
+
+function shuffle(array){
+
+for(let i=array.length-1;i>0;i--){
+
+const j=Math.floor(Math.random()*(i+1));
+
+[array[i],array[j]]=
+[array[j],array[i]];
+
+}
+
+return array;
+
+}
+
+/* INTRO */
+
+setTimeout(()=>{
+
+logoScreen.style.display='none';
+
+gameContainer.style.display='block';
+
+bgMusic.volume=0.2;
+
+bgMusic.play();
+
+speak('Welcome to Word Family i games');
+
+startGame1();
+
+},5000);
+
+/* GAME 1 */
+
+let game1Questions=shuffle([
+
+{
+image:'https://raw.githubusercontent.com/deepikadeorukhkar/LY4/main/literacy/assets/rib.png',
+correct:'rib',
+options:['nib','rib','bib']
+},
+
+{
+image:'https://raw.githubusercontent.com/deepikadeorukhkar/LY4/main/literacy/assets/nib.png',
+correct:'nib',
+options:['nib','rib','bib']
+},
+
+{
+image:'https://raw.githubusercontent.com/deepikadeorukhkar/LY4/main/literacy/assets/bib.png',
+correct:'bib',
+options:['nib','rib','bib']
+}
+
+]);
+
+let g1=0;
+
+function startGame1(){
+
+gameTitle.innerHTML='Game 1';
+
+instruction.innerHTML=
+'Look at the picture and choose the correct word.';
+
+showGame1();
+
+}
+
+function showGame1(){
+
+if(g1>=game1Questions.length){
+
+startGame2();
+
+return;
+
+}
+
+const q=game1Questions[g1];
+
+content.innerHTML=`
+
+<div id="balloon">
+
+<img class="mainImage"
+src="${q.image}">
+
+</div>
+
+<div class="optionArea">
+
+${shuffle([...q.options]).map(opt=>`
+
+<button class="optionBtn"
+onclick="checkGame1('${opt}')">
+
+${opt}
+
+</button>
+
+`).join('')}
+
+</div>
+
+`;
+
+speak(q.correct);
+
+}
+
+function checkGame1(choice){
+
+const q=game1Questions[g1];
+
+if(choice===q.correct){
+
+showCorrect();
+
+g1++;
+
+setTimeout(showGame1,1200);
+
+}else{
+
+showWrong();
+
+speak('Try again');
+
+}
+
+}
+
+/* GAME 2 */
+
+let game2Words=
+shuffle(['kit','lit','sit','hit','fit']);
+
+const game2Images=
+['fit','hit','kit','sit','lit'];
+
+let g2=0;
+
+function startGame2(){
+
+gameTitle.innerHTML='Game 2';
+
+instruction.innerHTML=
+'Look at the word and choose the correct picture';
+
+showGame2();
+
+}
+
+function showGame2(){
+
+if(g2>=game2Words.length){
+
+startGame3();
+
+return;
+
+}
+
+const word=game2Words[g2];
+
+content.innerHTML=`
+
+<div id="balloon">
+
+<div class="wordText">
+${word}
+</div>
+
+</div>
+
+<div class="optionArea">
+
+${shuffle([...game2Images]).map(img=>`
+
+<button class="pictureBtn"
+onclick="checkGame2('${img}')">
+
+<img src="https://raw.githubusercontent.com/deepikadeorukhkar/LY4/main/literacy/assets/${img}.png">
+
+</button>
+
+`).join('')}
+
+</div>
+
+`;
+
+speak(word);
+
+}
+
+function checkGame2(choice){
+
+const correct=game2Words[g2];
+
+if(choice===correct){
+
+showCorrect();
+
+g2++;
+
+setTimeout(showGame2,1200);
+
+}else{
+
+showWrong();
+
+speak('Try again');
+
+}
+
+}
+
+/* GAME 3 */
+
+let game3Questions=shuffle([
+
+{
+image:'https://raw.githubusercontent.com/deepikadeorukhkar/LY4/main/literacy/assets/fig.png',
+answer:['f','i','g'],
+letters:['n','i','b','g','f','t']
+},
+
+{
+image:'https://raw.githubusercontent.com/deepikadeorukhkar/LY4/main/literacy/assets/pig.png',
+answer:['p','i','g'],
+letters:['f','i','t','g','f','p']
+},
+
+{
+image:'https://raw.githubusercontent.com/deepikadeorukhkar/LY4/main/literacy/assets/wig.png',
+answer:['w','i','g'],
+letters:['i','g','f','n','w','d']
+},
+
+{
+image:'https://raw.githubusercontent.com/deepikadeorukhkar/LY4/main/literacy/assets/dig.png',
+answer:['d','i','g'],
+letters:['p','i','d','w','f','g']
+}
+
+]);
+
+let g3=0;
+let current=[];
+
+function startGame3(){
+
+gameTitle.innerHTML='Game 3';
+
+instruction.innerHTML=
+'Look at the picture and choose the correct letters.';
+
+showGame3();
+
+}
+
+function showGame3(){
+
+if(g3>=game3Questions.length){
+
+finishGame();
+
+return;
+
+}
+
+current=[];
+
+const q=game3Questions[g3];
+
+content.innerHTML=`
+
+<div id="balloon">
+
+<img class="mainImage"
+src="${q.image}">
+
+</div>
+
+<div id="letterArea">
+
+<div class="letterBox" id="b0"></div>
+<div class="letterBox" id="b1"></div>
+<div class="letterBox" id="b2"></div>
+
+</div>
+
+<div id="letters">
+
+${shuffle([...q.letters]).map(letter=>`
+
+<button class="letterBtn"
+onclick="selectLetter('${letter}')">
+
+${letter}
+
+</button>
+
+`).join('')}
+
+</div>
+
+`;
+
+}
+
+function selectLetter(letter){
+
+const q=game3Questions[g3];
+
+const index=current.length;
+
+if(letter===q.answer[index]){
+
+current.push(letter);
+
+document.getElementById(
+'b'+index
+).innerHTML=letter;
+
+if(current.length===3){
+
+showCorrect();
+
+g3++;
+
+setTimeout(showGame3,1200);
+
+}
+
+}else{
+
+showWrong();
+
+speak('Try again');
+
+current=[];
+
+for(let i=0;i<3;i++){
+
+document.getElementById(
+'b'+i
+).innerHTML='';
+
+}
+
+}
+
+}
+
+/* FINISH */
+
+function finishGame(){
+
+content.innerHTML=`
+
+<div style="
+font-size:110px;
+animation:float 2s infinite;
+">
+👏
+</div>
+
+<div style="
+font-size:42px;
+font-weight:bold;
+color:#ff4081;
+margin-top:20px;
+text-align:center;
+">
+Amazing Job!
+</div>
+
+`;
+
+speak(
+'Fantastic! You completed all the games.'
+);
+
+restartBtn.style.display='block';
+
+}
+
+/* RESTART */
+
+restartBtn.onclick=()=>{
+
+location.reload();
+
+};
+
+</script>
+
+</body>
+</html>
