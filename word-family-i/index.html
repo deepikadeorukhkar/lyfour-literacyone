@@ -2,716 +2,99 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>Word Family 'i' Game</title>
-
+<link href="https://fonts.cdnfonts.com/css/kg-neatly-printed" rel="stylesheet">
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Comic Sans MS', cursive;
-}
-
-body{
-background:linear-gradient(to bottom,#dff7ff,#fff5fb);
-overflow:hidden;
-touch-action:manipulation;
-}
-
-#intro{
-position:fixed;
-inset:0;
-background:white;
-display:flex;
-justify-content:center;
-align-items:center;
-z-index:9999;
-}
-
-#intro img{
-width:320px;
-max-width:80%;
-}
-
-#gameContainer{
-display:none;
-flex-direction:column;
-height:100vh;
-width:100vw;
-overflow:hidden;
-}
-
-#topBar{
-background:#ffb6d9;
-padding:12px;
-text-align:center;
-font-size:22px;
-font-weight:bold;
-color:#333;
-box-shadow:0 2px 6px rgba(0,0,0,0.2);
-}
-
-#gameTitle{
-font-size:30px;
-color:#ff4081;
-margin-bottom:5px;
-}
-
-#content{
-flex:1;
-display:flex;
-flex-direction:column;
-align-items:center;
-padding:10px;
-overflow:auto;
-}
-
-#questionArea{
-width:100%;
-display:flex;
-flex-direction:column;
-align-items:center;
-margin-top:10px;
-}
-
-#questionImage{
-width:220px;
-height:220px;
-object-fit:contain;
-background:white;
-border-radius:20px;
-padding:10px;
-box-shadow:0 5px 10px rgba(0,0,0,0.2);
-}
-
-#wordDisplay{
-font-size:50px;
-font-weight:bold;
-margin:20px;
-color:#ff5722;
-}
-
-#options{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:15px;
-margin-top:20px;
-}
-
-.optionBtn{
-min-width:110px;
-padding:15px 20px;
-font-size:28px;
-border:none;
-border-radius:20px;
-background:#fff176;
-font-weight:bold;
-cursor:pointer;
-box-shadow:0 4px 8px rgba(0,0,0,0.2);
-transition:0.2s;
-}
-
-.optionBtn:active{
-transform:scale(0.95);
-}
-
-.imageOption{
-width:110px;
-height:110px;
-background:white;
-border-radius:18px;
-padding:8px;
-object-fit:contain;
-box-shadow:0 4px 8px rgba(0,0,0,0.2);
-cursor:pointer;
-}
-
-#feedback{
-font-size:70px;
-margin-top:10px;
-height:80px;
-}
-
-#letterBoxes{
-display:flex;
-gap:10px;
-margin-top:20px;
-}
-
-.letterBox{
-width:70px;
-height:70px;
-background:white;
-border:3px dashed #666;
-border-radius:12px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:36px;
-font-weight:bold;
-}
-
-#letters{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:12px;
-margin-top:25px;
-}
-
-.letterBtn{
-width:70px;
-height:70px;
-border:none;
-border-radius:16px;
-background:#81d4fa;
-font-size:34px;
-font-weight:bold;
-cursor:pointer;
-box-shadow:0 4px 8px rgba(0,0,0,0.2);
-}
-
-#gameOver{
-display:none;
-text-align:center;
-margin-top:30px;
-}
-
-#gameOver h1{
-font-size:55px;
-color:#ff4081;
-margin-bottom:20px;
-}
-
-#restartBtn{
-padding:15px 35px;
-font-size:28px;
-border:none;
-border-radius:20px;
-background:#4caf50;
-color:white;
-cursor:pointer;
-}
-
-@media(max-width:768px){
-
-#questionImage{
-width:180px;
-height:180px;
-}
-
-.optionBtn{
-font-size:22px;
-padding:12px 18px;
-}
-
-.imageOption{
-width:90px;
-height:90px;
-}
-
-#wordDisplay{
-font-size:38px;
-}
-
-.letterBox{
-width:60px;
-height:60px;
-font-size:30px;
-}
-
-.letterBtn{
-width:60px;
-height:60px;
-font-size:28px;
-}
-
-}
-
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:'KG Neatly Printed','Comic Sans MS',sans-serif}
+:root{--img:min(30vw,220px);--btn:min(18vw,110px)}
+body{height:100dvh;background:linear-gradient(#dff7ff,#fff5fb);overflow:hidden;touch-action:manipulation}
+#intro,#game{position:fixed;inset:0}
+#intro{display:flex;align-items:center;justify-content:center;background:#fff;z-index:5}
+#intro img{width:min(70vw,320px)}
+#game{display:none;flex-direction:column}
+#top{background:#ffb6d9;padding:10px;text-align:center}
+#title{font-size:clamp(26px,4vw,36px);color:#ff4081}
+#content{flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;align-items:center}
+#questionArea{width:100%;display:flex;flex-direction:column;align-items:center}
+#questionImage{width:var(--img);height:var(--img);object-fit:contain;background:#fff;border-radius:20px;padding:10px}
+#options,#letters{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:16px}
+.optionBtn,.letterBtn,#restartBtn,#speakBtn{border:none;border-radius:16px;cursor:pointer}
+.optionBtn{padding:12px 20px;font-size:clamp(20px,3vw,30px)}
+.imageOption{width:var(--btn);height:var(--btn);object-fit:contain;background:#fff;border-radius:16px;padding:8px}
+#wordDisplay{font-size:clamp(34px,7vw,60px);margin:12px}
+#letterBoxes{display:flex;gap:10px;margin-top:15px}
+.letterBox,.letterBtn{width:min(15vw,70px);height:min(15vw,70px);display:flex;align-items:center;justify-content:center;font-size:clamp(24px,5vw,38px)}
+.letterBox{border:3px dashed #666;background:#fff;border-radius:12px}
+.letterBtn{background:#81d4fa}
+#feedback{font-size:64px;height:80px}
+#speakBtn{padding:8px 14px;background:#ffd54f;font-size:24px;margin-top:8px}
+#gameOver{display:none;text-align:center}
+@keyframes bounce{50%{transform:translateY(-10px)}}
+#gameOver h1{animation:bounce 1s infinite}
 </style>
 </head>
-
 <body>
-
-<!-- INTRO SCREEN -->
-
-<div id="intro">
-
-<img src="https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/innovine-logo.png">
-
+<div id="intro"><img src="https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/innovine-logo.png"></div>
+<div id="game">
+<div id="top"><div id="title">Word Family 'i'</div><div id="instruction"></div></div>
+<div id="content"><div id="questionArea"></div><div id="feedback"></div>
+<div id="gameOver"><h1>👏 Great Job! 👏</h1><button id="restartBtn">Play Again</button></div></div>
 </div>
 
-<!-- MAIN GAME -->
-
-<div id="gameContainer">
-
-<div id="topBar">
-
-<div id="gameTitle">Word Family 'i'</div>
-
-<div id="instructionText">Loading...</div>
-
-</div>
-
-<div id="content">
-
-<div id="questionArea"></div>
-
-<div id="feedback"></div>
-
-<div id="gameOver">
-
-<h1>👏 Great Job! 👏</h1>
-
-<button id="restartBtn">Play Again</button>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- AUDIO -->
-
-<audio id="correctSound"
-src="https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/correct.mp3"></audio>
-
-<audio id="wrongSound"
-src="https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/wrong.mp3"></audio>
-
-<audio id="bgMusic" autoplay loop
-src="https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/background-music.mp3"></audio>
+<audio id="correct" src="https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/correct.mp3"></audio>
+<audio id="wrong" src="https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/wrong.mp3"></audio>
+<audio id="bg" loop src="https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/background-music.mp3"></audio>
 
 <script>
+const area=q('questionArea'),ins=q('instruction'),fb=q('feedback');
+const correct=q('correct'),wrong=q('wrong');
+function q(x){return document.getElementById(x)}
+document.addEventListener('pointerdown',()=>q('bg').play().catch(()=>{}),{once:true});
+function speak(t){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.rate=.85;speechSynthesis.speak(u)}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+setTimeout(()=>{q('intro').style.display='none';q('game').style.display='flex';start1()},3000);
 
-/* INTRO */
+const g1=[{image:'rib',correct:'rib',options:['nib','rib','bib']},{image:'nib',correct:'nib',options:['nib','rib','bib']},{image:'bib',correct:'bib',options:['nib','rib','bib']}];
+let i1=0;
 
-setTimeout(()=>{
+function good(){fb.textContent='👏';correct.play();setTimeout(()=>fb.textContent='',800)}
+function bad(){fb.textContent='❌';wrong.play();speak('Try again');setTimeout(()=>fb.textContent='',800)}
 
-document.getElementById("intro").style.display="none";
-
-document.getElementById("gameContainer").style.display="flex";
-
-startGame1();
-
-},5000);
-
-/* ELEMENTS */
-
-const area=document.getElementById("questionArea");
-
-const instruction=document.getElementById("instructionText");
-
-const feedback=document.getElementById("feedback");
-
-const correctSound=document.getElementById("correctSound");
-
-const wrongSound=document.getElementById("wrongSound");
-
-/* SPEAK */
-
-function speak(text){
-
-speechSynthesis.cancel();
-
-const msg=new SpeechSynthesisUtterance(text);
-
-msg.rate=0.85;
-
-msg.pitch=1;
-
-speechSynthesis.speak(msg);
-
+function start1(){i1=0;ins.textContent='Game 1: Look at the picture and choose the correct word.';load1()}
+function load1(){
+ if(i1>=g1.length)return start2();
+ let x=g1[i1];
+ area.innerHTML=`<img id="questionImage" src="https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/${x.image}.png"><button id="speakBtn">🔊</button><div id="options"></div>`;
+ q('speakBtn').onclick=()=>speak(x.correct);
+ let o=document.getElementById('options');
+ shuffle([...x.options]).forEach(w=>{let b=document.createElement('button');b.className='optionBtn';b.textContent=w;b.onclick=()=>w===x.correct?(good(),i1++,setTimeout(load1,900)):bad();o.appendChild(b)})
 }
 
-/* FEEDBACK */
-
-function correctAnswer(){
-
-feedback.innerHTML="👏";
-
-correctSound.play();
-
-setTimeout(()=>{
-
-feedback.innerHTML="";
-
-},1000);
-
+const words=['kit','lit','sit','hit','fit']; let q2=[];
+function start2(){ins.textContent='Game 2: Look at the word and choose the correct picture.';q2=shuffle([...words]);load2()}
+function load2(){
+ if(!q2.length)return start3();
+ let w=q2[0];
+ area.innerHTML=`<div id="wordDisplay">${w}</div><button id="speakBtn">🔊</button><div id="options"></div>`;
+ q('speakBtn').onclick=()=>speak(w);
+ let o=document.getElementById('options');
+ shuffle([...words]).forEach(n=>{let im=document.createElement('img');im.className='imageOption';im.src=`https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/${n}.png`;im.onclick=()=>n===w?(good(),q2.shift(),setTimeout(load2,900)):bad();o.appendChild(im)})
 }
 
-function wrongAnswer(){
-
-feedback.innerHTML="❌";
-
-wrongSound.play();
-
-setTimeout(()=>{
-
-feedback.innerHTML="";
-
-},1000);
-
+const g3=[{image:'fig',answer:'fig',letters:['n','i','b','g','f','t']},{image:'pig',answer:'pig',letters:['f','i','t','g','f','p']},{image:'wig',answer:'wig',letters:['i','g','f','n','w','d']},{image:'dig',answer:'dig',letters:['p','i','d','w','f','g']}];
+let i3=0,cur='';
+function start3(){ins.textContent='Game 3: Complete the word using correct letters.';i3=0;load3()}
+function load3(){
+ if(i3>=g3.length)return finish();
+ let x=g3[i3]; cur='';
+ area.innerHTML=`<img id="questionImage" src="https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/${x.image}.png"><button id="speakBtn">🔊</button><div id="letterBoxes"><div class="letterBox"></div><div class="letterBox"></div><div class="letterBox"></div></div><div id="letters"></div>`;
+ q('speakBtn').onclick=()=>speak(x.answer);
+ let l=document.getElementById('letters');
+ shuffle([...x.letters]).forEach(ch=>{let b=document.createElement('button');b.className='letterBtn';b.textContent=ch;b.onclick=()=>{if(ch===x.answer[cur.length]){cur+=ch;document.querySelectorAll('.letterBox')[cur.length-1].textContent=ch;b.disabled=true;if(cur===x.answer){good();i3++;setTimeout(load3,900)}}else bad()};l.appendChild(b)})
 }
-
-/* SHUFFLE */
-
-function shuffle(arr){
-
-return arr.sort(()=>Math.random()-0.5);
-
-}
-
-/* ===========================
-GAME 1
-=========================== */
-
-const game1Questions=[
-
-{
-image:"rib",
-correct:"rib",
-options:["nib","rib","bib"]
-},
-
-{
-image:"nib",
-correct:"nib",
-options:["nib","rib","bib"]
-},
-
-{
-image:"bib",
-correct:"bib",
-options:["nib","rib","bib"]
-}
-
-];
-
-let g1=0;
-
-function startGame1(){
-
-instruction.innerHTML=
-"Game 1: Look at the picture and choose the correct word.";
-
-speak(instruction.innerHTML);
-
-g1=0;
-
-loadGame1();
-
-}
-
-function loadGame1(){
-
-if(g1>=game1Questions.length){
-
-startGame2();
-
-return;
-
-}
-
-const q=game1Questions[g1];
-
-area.innerHTML=`
-
-<img id="questionImage"
-src="https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/${q.image}.png">
-
-<div id="options"></div>
-
-`;
-
-speak(q.correct);
-
-const options=document.getElementById("options");
-
-shuffle([...q.options]).forEach(word=>{
-
-const btn=document.createElement("button");
-
-btn.className="optionBtn";
-
-btn.innerHTML=word;
-
-btn.onclick=()=>{
-
-if(word===q.correct){
-
-correctAnswer();
-
-g1++;
-
-setTimeout(loadGame1,1200);
-
-}else{
-
-wrongAnswer();
-
-speak("Try again");
-
-}
-
-};
-
-options.appendChild(btn);
-
-});
-
-}
-
-/* ===========================
-GAME 2
-=========================== */
-
-const game2Words=["kit","lit","sit","hit","fit"];
-
-let game2Queue=[];
-
-function startGame2(){
-
-instruction.innerHTML=
-"Game 2: Look at the word and choose the correct picture.";
-
-speak(instruction.innerHTML);
-
-game2Queue=shuffle([...game2Words]);
-
-loadGame2();
-
-}
-
-function loadGame2(){
-
-if(game2Queue.length===0){
-
-startGame3();
-
-return;
-
-}
-
-const currentWord=game2Queue[0];
-
-area.innerHTML=`
-
-<div id="wordDisplay">${currentWord}</div>
-
-<div id="options"></div>
-
-`;
-
-speak(currentWord);
-
-const options=document.getElementById("options");
-
-shuffle([...game2Words]).forEach(word=>{
-
-const img=document.createElement("img");
-
-img.className="imageOption";
-
-img.src=
-`https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/${word}.png`;
-
-img.onclick=()=>{
-
-if(word===currentWord){
-
-correctAnswer();
-
-game2Queue.shift();
-
-setTimeout(loadGame2,1200);
-
-}else{
-
-wrongAnswer();
-
-speak("Try again");
-
-}
-
-};
-
-options.appendChild(img);
-
-});
-
-}
-
-/* ===========================
-GAME 3
-=========================== */
-
-const game3Questions=[
-
-{
-image:"fig",
-answer:"fig",
-letters:["n","i","b","g","f","t"]
-},
-
-{
-image:"pig",
-answer:"pig",
-letters:["f","i","t","g","f","p"]
-},
-
-{
-image:"wig",
-answer:"wig",
-letters:["i","g","f","n","w","d"]
-},
-
-{
-image:"dig",
-answer:"dig",
-letters:["p","i","d","w","f","g"]
-}
-
-];
-
-let g3=0;
-
-let currentAnswer="";
-
-function startGame3(){
-
-instruction.innerHTML=
-"Game 3: Complete the word using correct letters.";
-
-speak(instruction.innerHTML);
-
-g3=0;
-
-loadGame3();
-
-}
-
-function loadGame3(){
-
-if(g3>=game3Questions.length){
-
-finishGame();
-
-return;
-
-}
-
-const q=game3Questions[g3];
-
-currentAnswer="";
-
-area.innerHTML=`
-
-<img id="questionImage"
-src="https://raw.githubusercontent.com/deepikadeorukhkar/lyfour-literacyone/main/word-family-i/assets/${q.image}.png">
-
-<div id="letterBoxes">
-
-<div class="letterBox"></div>
-
-<div class="letterBox"></div>
-
-<div class="letterBox"></div>
-
-</div>
-
-<div id="letters"></div>
-
-`;
-
-speak(q.answer);
-
-const letters=document.getElementById("letters");
-
-shuffle([...q.letters]).forEach(letter=>{
-
-const btn=document.createElement("button");
-
-btn.className="letterBtn";
-
-btn.innerHTML=letter;
-
-btn.onclick=()=>{
-
-const expected=
-q.answer[currentAnswer.length];
-
-if(letter===expected){
-
-currentAnswer+=letter;
-
-document.querySelectorAll(".letterBox")
-[currentAnswer.length-1]
-.innerHTML=letter;
-
-btn.disabled=true;
-
-btn.style.opacity="0.5";
-
-if(currentAnswer===q.answer){
-
-correctAnswer();
-
-g3++;
-
-setTimeout(loadGame3,1200);
-
-}
-
-}else{
-
-wrongAnswer();
-
-speak("Try again");
-
-}
-
-};
-
-letters.appendChild(btn);
-
-});
-
-}
-
-/* ===========================
-FINISH
-=========================== */
-
-function finishGame(){
-
-area.innerHTML="";
-
-instruction.innerHTML=
-"Wonderful! You completed all the games.";
-
-document.getElementById("gameOver")
-.style.display="block";
-
-speak(
-"Great job! You completed all the games!"
-);
-
-}
-
-/* RESTART */
-
-document.getElementById("restartBtn")
-.onclick=()=>{
-
-location.reload();
-
-};
-
+function finish(){area.innerHTML='';ins.textContent='Wonderful! You completed all the games.';q('gameOver').style.display='block';speak('Great job!')}
+q('restartBtn').onclick=()=>{q('gameOver').style.display='none';start1()}
 </script>
-
 </body>
 </html>
